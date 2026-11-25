@@ -108,37 +108,42 @@ const SLIDES = [
   { key:"intro", num:"Read first", title:"How this board works", sub:"Which steps to copy and which to avoid", color:"--c9",
     intro:"Every step of a typical tech coin launch is here, in order. Normal coloured slides are steps you can copy. Red slides marked DON'T are common dev practices that will get you in trouble. Each one explains why.",
     notes:[
-      ["Copy: the build","Remixing a trending launchpad with ChatGPT, v0, motion.so and a domain is a fast, cheap way to ship a working tech coin."],
+      ["Copy: the build","ChatGPT deep research for the idea, Claude to build, motion.so for the video and Railway to go live is a fast, cheap way to ship a working tech coin."],
       ["Don't copy: the launch","Bundling with Proxima, hidden wallets and faked social proof are where a lot of devs make their money, and where the trouble comes from."]
     ],
   },
-  { key:"idea", num:"Step 1", title:"Find the idea", sub:"Remix a launchpad that's trending today", color:"--c1", time:"5 to 10 min",
-    intro:"Find a launchpad that launched today on Axiom, give its website to ChatGPT, and ask for a new idea in the same style. For example: PawLaunch, a launchpad whose fees go to animal shelters.",
+  { key:"idea", num:"Step 1", title:"Find the idea", sub:"ChatGPT deep research on coins you like", color:"--c1", time:"20 to 40 min",
+    intro:"Pick 3 to 5 tech coins you like and run ChatGPT deep research on them. Use what it finds to come up with your own idea, then check nobody has done it already.",
     notes:[
-      ["Find a trending launchpad","Check what launched today on Axiom."],
-      ["Paste its site into ChatGPT","Ask for another idea like this one."],
-      ["Pick an idea with a hook","Like a cause, a niche or a twist on the original."],
-      ["Check it's not done already","Search pump.fun and DEX Screener for the name and concept first."]
+      ["List coins you like","3 to 5 tech coins that ran, or that you'd actually use."],
+      ["Run deep research","Ask ChatGPT what each one does, why it ran, how it makes money, and what's missing."],
+      ["Ask for ideas from the gaps","\"Give me 5 tech coin ideas that fix what these are missing, buildable in 1 to 2 days.\""],
+      ["Pick one with a hook","A clear use, a real fee, and a one-line story."],
+      ["Check it's not done already","Search pump.fun and DEX Screener for the name and concept."]
     ],
     score:true
   },
-  { key:"prompt", num:"Step 2", title:"Get the website prompt", sub:"ChatGPT writes the build prompt", color:"--c2", time:"2 min",
-    intro:"Ask ChatGPT for a prompt that copies the site you just showed it, rebuilt for your idea.",
+  { key:"prompt", num:"Step 2", title:"Get the website prompt", sub:"ChatGPT writes a prompt for Claude", color:"--c2", time:"5 min",
+    intro:"Ask ChatGPT to turn the idea into one detailed build prompt for Claude: a real working website with a backend, not a mock-up.",
     notes:[
-      ["Ask for a v0 prompt","\"Write a prompt to copy the site I sent you, but for [idea].\""],
-      ["Copy the whole prompt","Ignore the extra tips. You only need the prompt."]
+      ["Ask for a Claude build prompt","Pages, features, the fee and how it funds the token, the look and feel."],
+      ["Ask for a real backend","Working launch flow, live Solana data, storage. Say it will be hosted on Railway."],
+      ["Ask for the launch video prompt too","Same chat, so the video matches the site. You'll use it in Step 5."],
+      ["Save both prompts","Paste them into your coin's notes before you build."]
     ]
   },
-  { key:"build", num:"Step 3", title:"Build it in v0", sub:"Vercel's AI builder", color:"--c3", time:"1 to 2 hours",
-    intro:"Paste the prompt into v0. Expect a landing page in about 10 minutes and around $15 to $40 in AI credits.",
+  { key:"build", num:"Step 3", title:"Build it with Claude", sub:"Working site + backend in a GitHub repo", color:"--c3", time:"1 to 2 days",
+    intro:"Paste the prompt into Claude and have it build the site straight into a new GitHub repo, so Railway can deploy it in Step 6.",
     notes:[
-      ["Paste prompt into v0","The landing page appears in about 10 minutes."],
-      ["Make it actually work","Ask v0 (or ChatGPT) to make the launch flow real, so coins launch on pump.fun from the site."],
-      ["Backend on Supabase","Free for your first projects, about $20 a month after that."],
-      ["Test the whole flow","Enter a name, upload an image, set fees, continue. Fix anything that breaks."],
-      ["Charity or fee claims must be real","If the site says fees go to a cause, they have to actually go there."]
+      ["New GitHub repo","One repo per coin. Claude builds and pushes the code there."],
+      ["Paste the prompt","Then keep going until every page and button works."],
+      ["Launch flow on pump.fun","Coins launch for real from the site, not a demo."],
+      ["Live Solana data via Helius","Get a Helius API key for wallet and token data."],
+      ["Images and metadata via Pinata","Get a Pinata key so token images and metadata upload properly."],
+      ["Keys never go in the code","They go in Railway's Variables in Step 6."],
+      ["Charity or fee claims must be real","If the site says fees go somewhere, they have to actually go there."]
     ],
-    links:[["v0","https://v0.app/"]]
+    links:[["Claude","https://claude.ai"],["Helius","https://www.helius.dev"],["Pinata","https://pinata.cloud"]]
   },
   { key:"brand", num:"Step 4", title:"Logo and banner", sub:"Made with ChatGPT", color:"--c4", time:"10 min",
     intro:"Make the logo and the X banner with ChatGPT, at no cost.",
@@ -147,23 +152,27 @@ const SLIDES = [
       ["X banner","1500 × 500 px. Can double as the DEX Screener header (3:1)."]
     ]
   },
-  { key:"video", num:"Step 5", title:"Launch video", sub:"motion.so", color:"--c6", time:"30 to 60 min to render",
-    intro:"ChatGPT writes the video prompt, motion.so makes the video from your site link. About $5 to $10 a video against $200 to $400 for an editor.",
+  { key:"video", num:"Step 5", title:"Launch video", sub:"Prompt from ChatGPT", color:"--c6", time:"30 to 60 min to render",
+    intro:"Use the video prompt ChatGPT wrote in Step 2. Paste it into motion.so with your live site link (from Step 6, or a preview link).",
     notes:[
-      ["Get a video prompt","Ask ChatGPT for a motion.so prompt: clean launch-app style animations, clean sound effects, UK garage type beat."],
+      ["Use the Step 2 video prompt","Clean launch-app style animations, clean sound effects, a beat that fits."],
       ["Add your site link","Paste the prompt and your live site into motion.so."],
       ["Pick quality","Medium for tests, high for the real launch."],
-      ["Wait","It takes 30 minutes to an hour to render."]
+      ["Wait","It takes 30 minutes to an hour to render. About $5 to $10 a video."]
     ],
     links:[["motion.so","https://motion.so/"]]
   },
-  { key:"domain", num:"Step 6", title:"Publish + domain", sub:"Through Vercel", color:"--c7", time:"10 min",
-    intro:"Publish the site from v0 and buy a domain through Vercel. Around $15 to $25.",
+  { key:"domain", num:"Step 6", title:"Go live on Railway", sub:"Public site with backend", color:"--c7", time:"15 to 30 min",
+    intro:"Railway takes the GitHub repo Claude built and runs it as a public site with its backend. The Hobby plan is $5 a month, with $5 of usage included.",
     notes:[
-      ["Publish changes in v0","You get a Vercel link straight away."],
-      ["Buy a domain on Vercel","About $20 at most."],
-      ["Check it on a phone","Every button, every page."]
-    ]
+      ["New project from GitHub","In Railway, deploy from the coin's repo."],
+      ["Add the keys in Variables","Helius, Pinata and any others. Redeploy after adding."],
+      ["Generate a domain","You get a free .up.railway.app link straight away."],
+      ["Custom domain (optional)","Buy one and point it at Railway in the service's Networking settings."],
+      ["Check it on a phone","Every page, every button, a test launch."],
+      ["Fix with Claude, push, redeploy","Railway redeploys each time the repo updates."]
+    ],
+    links:[["Railway","https://railway.com"],["Railway pricing","https://docs.railway.com/reference/pricing"]]
   },
   { key:"x", num:"Step 7", title:"X account", sub:"Plus a blue check", color:"--c8", time:"10 min",
     intro:"Make a new X account for the coin and pay for the blue check on your phone (about $5).",
@@ -205,8 +214,8 @@ const SLIDES = [
   { key:"maths", num:"Reality check", title:"The money claims", sub:"\"$50K to $100K a month\"", color:"--c9",
     intro:"The pitch: one coin costs about $60, and 24 coins a day at 5 SOL each makes $50K to $100K a month. The cost list is fair. The income maths isn't.",
     notes:[
-      ["Costs","Idea and logo free, site $15 to $25, domain $15 to $25, video $5 to $10, blue check $5. About $60 a coin."],
-      ["24 a day isn't real","Each build plus video takes 1 to 2 hours, and nobody launches around the clock."],
+      ["Costs","Idea, prompts and logo with ChatGPT, build with Claude, Railway $5 a month, video $5 to $10, blue check $5, domain optional."],
+      ["24 a day isn't real","A working build plus video takes 1 to 2 days, and nobody launches around the clock."],
       ["Most launches make nothing","The 5 SOL a coin figure depends on the bundle selling to buyers. Without it, most coins never bond."],
       ["The market has shrunk","pump.fun's monthly volume fell from $11.6B in Jan 2025 to $2.1B in Jan 2026, an 81% drop."]
     ],
