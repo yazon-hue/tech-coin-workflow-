@@ -105,16 +105,15 @@
 
 <script>
 const SLIDES = [
-  { key:"intro", num:"Read first", title:"How this board works", sub:"Based on zurh's \"$100K/Month Devving Memecoins\" tutorial", color:"--c9",
-    intro:"Every step from the video is here, in the order he does it. Normal coloured slides are steps you can copy. Red slides marked DON'T are things the video tells you to do that will get you in trouble. Each one explains why.",
+  { key:"intro", num:"Read first", title:"How this board works", sub:"Which steps to copy and which to avoid", color:"--c9",
+    intro:"Every step of a typical tech coin launch is here, in order. Normal coloured slides are steps you can copy. Red slides marked DON'T are common dev practices that will get you in trouble. Each one explains why.",
     notes:[
       ["Copy: the build","Remixing a trending launchpad with ChatGPT, v0, motion.so and a domain is a fast, cheap way to ship a working tech coin."],
-      ["Don't copy: the launch","Bundling with Proxima, hidden wallets and faked social proof are where the money in the video really comes from, and where the trouble comes from."]
+      ["Don't copy: the launch","Bundling with Proxima, hidden wallets and faked social proof are where a lot of devs make their money, and where the trouble comes from."]
     ],
-    links:[["Watch the video","https://www.youtube.com/watch?v=qZ2k-yU_WiI"]]
   },
-  { key:"bundler", num:"Video step 1", title:"DON'T: Sign up for a bundler", sub:"Proxima", warn:true,
-    intro:"The video opens by telling you to sign up for Proxima so you can \"bundle\" your coin. In his words, bundling is buying your own supply first \"so you can't lose money\". Chris's video pushes the same tool.",
+  { key:"bundler", num:"Step 1", title:"DON'T: Sign up for a bundler", sub:"Proxima", warn:true,
+    intro:"Many devs start by signing up for a bundler like Proxima. Bundling is sold as buying your own supply first \"so you can't lose money\".",
     notes:[
       ["What bundling is","The dev buys a big share of the supply at the same moment as launch, spread across wallets that look like strangers."],
       ["Why \"can't lose\"","You can't lose because the people who buy after you are the ones who lose. Your profit is their loss."],
@@ -122,8 +121,8 @@ const SLIDES = [
       ["It gets caught","Bubble-map and holder-check tools flag bundles within minutes. The coin gets called out and the dev wallet is marked."]
     ]
   },
-  { key:"idea", num:"Video step 2", title:"Find the idea", sub:"Remix a launchpad that's trending today", color:"--c1", time:"5 to 10 min",
-    intro:"Find a launchpad that launched today on Axiom, give its website to ChatGPT, and ask for a new idea in the same style. His example: PawLaunch, a launchpad whose fees go to animal shelters.",
+  { key:"idea", num:"Step 2", title:"Find the idea", sub:"Remix a launchpad that's trending today", color:"--c1", time:"5 to 10 min",
+    intro:"Find a launchpad that launched today on Axiom, give its website to ChatGPT, and ask for a new idea in the same style. For example: PawLaunch, a launchpad whose fees go to animal shelters.",
     notes:[
       ["Find a trending launchpad","Check what launched today on Axiom."],
       ["Paste its site into ChatGPT","Ask for another idea like this one."],
@@ -132,33 +131,33 @@ const SLIDES = [
     ],
     score:true
   },
-  { key:"prompt", num:"Video step 3", title:"Get the website prompt", sub:"ChatGPT writes the build prompt", color:"--c2", time:"2 min",
+  { key:"prompt", num:"Step 3", title:"Get the website prompt", sub:"ChatGPT writes the build prompt", color:"--c2", time:"2 min",
     intro:"Ask ChatGPT for a prompt that copies the site you just showed it, rebuilt for your idea.",
     notes:[
       ["Ask for a v0 prompt","\"Write a prompt to copy the site I sent you, but for [idea].\""],
       ["Copy the whole prompt","Ignore the extra tips. You only need the prompt."]
     ]
   },
-  { key:"build", num:"Video step 4", title:"Build it in v0", sub:"Vercel's AI builder", color:"--c3", time:"1 to 2 hours",
-    intro:"Paste the prompt into v0. He has a landing page in about 10 minutes and spends around $15 to $40 in AI credits.",
+  { key:"build", num:"Step 4", title:"Build it in v0", sub:"Vercel's AI builder", color:"--c3", time:"1 to 2 hours",
+    intro:"Paste the prompt into v0. Expect a landing page in about 10 minutes and around $15 to $40 in AI credits.",
     notes:[
       ["Paste prompt into v0","The landing page appears in about 10 minutes."],
       ["Make it actually work","Ask v0 (or ChatGPT) to make the launch flow real, so coins launch on pump.fun from the site."],
-      ["Backend on Supabase","Free for your first projects, about $20 a month after that, he says."],
+      ["Backend on Supabase","Free for your first projects, about $20 a month after that."],
       ["Test the whole flow","Enter a name, upload an image, set fees, continue. Fix anything that breaks."],
       ["Charity or fee claims must be real","If the site says fees go to a cause, they have to actually go there."]
     ],
     links:[["v0","https://v0.app/"]]
   },
-  { key:"brand", num:"Video step 5", title:"Logo and banner", sub:"Made with ChatGPT", color:"--c4", time:"10 min",
-    intro:"He makes the logo and the X banner with ChatGPT, at no cost.",
+  { key:"brand", num:"Step 5", title:"Logo and banner", sub:"Made with ChatGPT", color:"--c4", time:"10 min",
+    intro:"Make the logo and the X banner with ChatGPT, at no cost.",
     notes:[
       ["Logo","Square, 1000 × 1000 px."],
       ["X banner","1500 × 500 px. Can double as the DEX Screener header (3:1)."]
     ]
   },
-  { key:"video", num:"Video step 6", title:"Launch video", sub:"motion.so", color:"--c6", time:"30 to 60 min to render",
-    intro:"ChatGPT writes the video prompt, motion.so makes the video from your site link. About $5 to $10 a video against $200 to $400 for an editor, he says.",
+  { key:"video", num:"Step 6", title:"Launch video", sub:"motion.so", color:"--c6", time:"30 to 60 min to render",
+    intro:"ChatGPT writes the video prompt, motion.so makes the video from your site link. About $5 to $10 a video against $200 to $400 for an editor.",
     notes:[
       ["Get a video prompt","Ask ChatGPT for a motion.so prompt: clean launch-app style animations, clean sound effects, UK garage type beat."],
       ["Add your site link","Paste the prompt and your live site into motion.so."],
@@ -167,24 +166,24 @@ const SLIDES = [
     ],
     links:[["motion.so","https://motion.so/"]]
   },
-  { key:"domain", num:"Video step 7", title:"Publish + domain", sub:"Through Vercel", color:"--c7", time:"10 min",
+  { key:"domain", num:"Step 7", title:"Publish + domain", sub:"Through Vercel", color:"--c7", time:"10 min",
     intro:"Publish the site from v0 and buy a domain through Vercel. Around $15 to $25.",
     notes:[
       ["Publish changes in v0","You get a Vercel link straight away."],
-      ["Buy a domain on Vercel","About $20 at most, he says."],
+      ["Buy a domain on Vercel","About $20 at most."],
       ["Check it on a phone","Every button, every page."]
     ]
   },
-  { key:"x", num:"Video step 8", title:"X account", sub:"Plus a blue check", color:"--c8", time:"10 min",
-    intro:"Make a new X account for the coin and pay for the blue check on your phone (about $5, he says).",
+  { key:"x", num:"Step 8", title:"X account", sub:"Plus a blue check", color:"--c8", time:"10 min",
+    intro:"Make a new X account for the coin and pay for the blue check on your phone (about $5).",
     notes:[
       ["New X account","Handle, logo, banner, bio, website link."],
       ["Blue check","Paid verification from the X app."],
       ["Pin the video","Your motion.so launch video as the pinned post."]
     ]
   },
-  { key:"proof", num:"From Chris's video", title:"DON'T: Fake social proof", sub:"Bought accounts and \"smart followers\"", warn:true,
-    intro:"Chris's video sells \"smart followers\" as \"cheap social proof\", and buying OG or aged accounts does the same job. Both make the coin look more followed and trusted than it is.",
+  { key:"proof", num:"Avoid", title:"DON'T: Fake social proof", sub:"Bought accounts and \"smart followers\"", warn:true,
+    intro:"\"Smart followers\" are sold to devs as \"cheap social proof\", and buying OG or aged accounts does the same job. Both make the coin look more followed and trusted than it is.",
     notes:[
       ["What it is","Paying for followers, or buying an old account with history, so a brand-new coin looks established."],
       ["Why it's trouble","It misleads buyers about who backs the coin. Buying, selling or faking accounts is against X's rules."],
@@ -192,10 +191,10 @@ const SLIDES = [
       ["Do instead","A fresh account, a real blue check, good content and good timing."]
     ]
   },
-  { key:"bundle", num:"Video step 9", title:"DON'T: The bundled launch", sub:"How the video actually launches", warn:true,
-    intro:"In Proxima the video buys extra wallets from a marketplace, set up so they don't look linked. The dev takes a small, locked 1% in public, while 12 to 15% of supply sits across 10 or more hidden holder wallets that he later sells from \"when I feel it's right\".",
+  { key:"bundle", num:"Step 9", title:"DON'T: The bundled launch", sub:"How bundled launches work", warn:true,
+    intro:"The dev buys extra wallets from a marketplace, set up so they don't look linked. They take a small, locked 1% in public, while 12 to 15% of supply sits across 10 or more hidden holder wallets that they sell from later.",
     notes:[
-      ["Why the wallets are hidden","He says it himself: if buyers could see you hold the supply, \"people are not going to buy on top of you\". Hiding it is the whole point."],
+      ["Why the wallets are hidden","If buyers could see the dev holds the supply, nobody would buy on top of them. Hiding it is the whole point."],
       ["The locked 1% is cover","Locking the public dev buy looks trustworthy, while the real position is in the other wallets."],
       ["The charity makes it worse","Selling hidden supply on a coin that promises fees to animal shelters uses a good cause to pull buyers in."],
       ["What it can cost you","Called out publicly, wallets flagged for life, and in the UK and elsewhere a real risk of fraud or market-abuse claims."]
@@ -213,9 +212,9 @@ const SLIDES = [
     links:[["pump.fun","https://pump.fun/create"]]
   },
   { key:"maths", num:"Reality check", title:"The money claims", sub:"\"$50K to $100K a month\"", color:"--c9",
-    intro:"The video says one coin costs about $60, and that 24 coins a day at 5 SOL each makes $50K to $100K a month. The cost list is fair. The income maths isn't.",
+    intro:"The pitch: one coin costs about $60, and 24 coins a day at 5 SOL each makes $50K to $100K a month. The cost list is fair. The income maths isn't.",
     notes:[
-      ["Costs (his numbers)","Idea and logo free, site $15 to $25, domain $15 to $25, video $5 to $10, blue check $5. About $60 a coin."],
+      ["Costs","Idea and logo free, site $15 to $25, domain $15 to $25, video $5 to $10, blue check $5. About $60 a coin."],
       ["24 a day isn't real","Each build plus video takes 1 to 2 hours, and nobody launches around the clock."],
       ["Most launches make nothing","The 5 SOL a coin figure depends on the bundle selling to buyers. Without it, most coins never bond."],
       ["The market has shrunk","pump.fun's monthly volume fell from $11.6B in Jan 2025 to $2.1B in Jan 2026, an 81% drop."]
