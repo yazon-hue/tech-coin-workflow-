@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech Launch Workflow</title>
+<style>
+  :root{
+    --bg:#f4f3ef; --grid:#e4e2dc; --ink:#1d1d1b; --quiet:#6b6a64; --card:#ffffff; --line:#d7d4cc;
+    --c1:#f6a27c; --c2:#7fd1b0; --c3:#93a6c4; --c4:#eb9cbf; --c5:#8cc98a; --c6:#a99be0; --c7:#ef8f8f; --c8:#7fb2ea; --c9:#f2cf63;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:28px 28px; display:flex; flex-direction:column;
+  }
+  header{display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(255,255,255,.85);border-bottom:1px solid var(--line);backdrop-filter:blur(4px);flex-wrap:wrap}
+  header h1{font-size:15px;margin:0;font-weight:700;letter-spacing:.2px}
+  header .coin{display:flex;align-items:center;gap:8px;margin-left:auto}
+  header label{font-size:12px;color:var(--quiet)}
+  input,textarea,select{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:6px;padding:7px 9px;background:#fff;color:var(--ink)}
+  button{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:7px 12px;background:#fff;cursor:pointer;color:var(--ink)}
+  button:hover{border-color:#aaa}
+  button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .progress{height:4px;background:var(--line)}
+  .progress div{height:100%;background:var(--ink);width:0;transition:width .25s}
+  nav.steps{display:flex;gap:6px;padding:10px 20px;overflow-x:auto;scrollbar-width:thin}
+  nav.steps button{white-space:nowrap;font-size:12px;padding:5px 10px;border-radius:999px}
+  nav.steps button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  nav.steps button.done::after{content:" ✓"}
+  main{flex:1;overflow:auto;padding:12px 20px 96px}
+  .slide{max-width:1040px;margin:0 auto}
+  .board{display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+  .head{border-radius:8px;padding:18px;border:2px solid rgba(0,0,0,.15);box-shadow:0 2px 0 rgba(0,0,0,.06);position:sticky;top:0}
+  .head .num{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.7}
+  .head h2{margin:6px 0 4px;font-size:24px;line-height:1.15}
+  .head .sub{font-size:13px}
+  .head .time{margin-top:12px;font-size:12px;font-weight:600;background:rgba(255,255,255,.55);display:inline-block;padding:3px 8px;border-radius:999px}
+  .intro{font-size:15px;line-height:1.5;margin:0 0 14px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .note{position:relative;border-radius:6px;padding:14px 14px 14px 40px;min-height:92px;font-size:14px;line-height:1.4;cursor:pointer;border:1px solid rgba(0,0,0,.12);box-shadow:0 2px 0 rgba(0,0,0,.06);transition:opacity .15s,transform .1s;user-select:none}
+  .note:hover{transform:translateY(-1px)}
+  .note b{display:block;margin-bottom:3px}
+  .note .tick{position:absolute;left:12px;top:14px;width:18px;height:18px;border-radius:4px;border:2px solid rgba(0,0,0,.35);background:rgba(255,255,255,.7)}
+  .note.done{opacity:.45}
+  .note.done .tick{background:var(--ink);border-color:var(--ink)}
+  .note.done .tick::after{content:"";position:absolute;left:4px;top:0;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .note.warnnote{cursor:default;background:#fde8e6;border:2px solid #d9534f;padding-left:40px}
+  .note.warnnote:hover{transform:none}
+  .note.warnnote .x{position:absolute;left:12px;top:12px;width:20px;height:20px;border-radius:50%;background:#c62828;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .head.warn{background:#c62828 !important;color:#fff;border-color:#8e1b1b}
+  .head.warn .time{color:var(--ink)}
+  .switch{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:#fff;color:var(--ink)}
+  .switch.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .note.dashed{border:2px dashed rgba(0,0,0,.3)}
+  .note .tag{display:inline-block;font-size:11px;font-weight:700;background:rgba(255,255,255,.65);border-radius:4px;padding:1px 6px;margin-top:6px}
+  .panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:var(--quiet)}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;color:var(--quiet);font-weight:600}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:180px}
+  .field label{font-size:12px;color:var(--quiet)}
+  .score{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .score input[type=range]{width:100%}
+  .total{font-size:20px;font-weight:700;margin-top:10px}
+  .go{color:#1b7f46}.nogo{color:#b3261e}
+  .tpl{background:#faf9f6;border:1px solid var(--line);border-radius:6px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;white-space:pre-wrap;margin:6px 0 4px}
+  .rules li{margin:8px 0;font-size:15px;line-height:1.45}
+  .small{font-size:12px;color:var(--quiet);line-height:1.5}
+  a{color:#1f5fbf}
+  footer{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:rgba(255,255,255,.92);border-top:1px solid var(--line)}
+  footer .count{font-size:13px;color:var(--quiet)}
+  @media (max-width:760px){
+    .board{grid-template-columns:1fr}
+    .head{position:static}
+    header .coin{margin-left:0;width:100%}
+    header .coin select{flex:1}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tech Launch Workflow</h1>
+  <a class="switch " href="https://yazon-hue.github.io/meme-coin-workflow-/">Meme workflow</a><a class="switch on" href="index.html">Tech workflow</a>
+  <div class="coin">
+    <label for="coinSel">Working on</label>
+    <select id="coinSel"></select>
+    <button id="newCoin">+ New coin</button>
+    <button id="resetCoin" title="Untick every note for this coin">Reset ticks</button>
+  </div>
+</header>
+<div class="progress"><div id="bar"></div></div>
+<nav class="steps" id="steps"></nav>
+<main><div class="slide" id="slide"></div></main>
+<footer>
+  <button id="prev">← Back</button>
+  <span class="count" id="count"></span>
+  <button id="next" class="primary">Next →</button>
+</footer>
+
+<script>
+const SLIDES = [
+  { key:"intro", num:"Read first", title:"How this board works", sub:"Based on zurh's \"$100K/Month Devving Memecoins\" tutorial", color:"--c9",
+    intro:"Every step from the video is here, in the order he does it. Normal coloured slides are steps you can copy. Red slides marked DON'T are things the video tells you to do that will get you in trouble. Each one explains why.",
+    notes:[
+      ["Copy: the build","Remixing a trending launchpad with ChatGPT, v0, motion.so and a domain is a fast, cheap way to ship a working tech coin."],
+      ["Don't copy: the launch","Bundling with Proxima, hidden wallets and faked social proof are where the money in the video really comes from, and where the trouble comes from."]
+    ],
+    links:[["Watch the video","https://www.youtube.com/watch?v=qZ2k-yU_WiI"]]
+  },
+  { key:"bundler", num:"Video step 1", title:"DON'T: Sign up for a bundler", sub:"Proxima", warn:true,
+    intro:"The video opens by telling you to sign up for Proxima so you can \"bundle\" your coin. In his words, bundling is buying your own supply first \"so you can't lose money\". Chris's video pushes the same tool.",
+    notes:[
+      ["What bundling is","The dev buys a big share of the supply at the same moment as launch, spread across wallets that look like strangers."],
+      ["Why \"can't lose\"","You can't lose because the people who buy after you are the ones who lose. Your profit is their loss."],
+      ["Why it's trouble","Buyers are misled about who holds the supply. In many places that can count as market manipulation or fraud."],
+      ["It gets caught","Bubble-map and holder-check tools flag bundles within minutes. The coin gets called out and the dev wallet is marked."]
+    ]
+  },
+  { key:"idea", num:"Video step 2", title:"Find the idea", sub:"Remix a launchpad that's trending today", color:"--c1", time:"5 to 10 min",
+    intro:"Find a launchpad that launched today on Axiom, give its website to ChatGPT, and ask for a new idea in the same style. His example: PawLaunch, a launchpad whose fees go to animal shelters.",
+    notes:[
+      ["Find a trending launchpad","Check what launched today on Axiom."],
+      ["Paste its site into ChatGPT","Ask for another idea like this one."],
+      ["Pick an idea with a hook","Like a cause, a niche or a twist on the original."],
+      ["Check it's not done already","Search pump.fun and DEX Screener for the name and concept first."]
+    ],
+    score:true
+  },
+  { key:"prompt", num:"Video step 3", title:"Get the website prompt", sub:"ChatGPT writes the build prompt", color:"--c2", time:"2 min",
+    intro:"Ask ChatGPT for a prompt that copies the site you just showed it, rebuilt for your idea.",
+    notes:[
+      ["Ask for a v0 prompt","\"Write a prompt to copy the site I sent you, but for [idea].\""],
+      ["Copy the whole prompt","Ignore the extra tips. You only need the prompt."]
+    ]
+  },
+  { key:"build", num:"Video step 4", title:"Build it in v0", sub:"Vercel's AI builder", color:"--c3", time:"1 to 2 hours",
+    intro:"Paste the prompt into v0. He has a landing page in about 10 minutes and spends around $15 to $40 in AI credits.",
+    notes:[
+      ["Paste prompt into v0","The landing page appears in about 10 minutes."],
+      ["Make it actually work","Ask v0 (or ChatGPT) to make the launch flow real, so coins launch on pump.fun from the site."],
+      ["Backend on Supabase","Free for your first projects, about $20 a month after that, he says."],
+      ["Test the whole flow","Enter a name, upload an image, set fees, continue. Fix anything that breaks."],
+      ["Charity or fee claims must be real","If the site says fees go to a cause, they have to actually go there."]
+    ],
+    links:[["v0","https://v0.app/"]]
+  },
+  { key:"brand", num:"Video step 5", title:"Logo and banner", sub:"Made with ChatGPT", color:"--c4", time:"10 min",
+    intro:"He makes the logo and the X banner with ChatGPT, at no cost.",
+    notes:[
+      ["Logo","Square, 1000 × 1000 px."],
+      ["X banner","1500 × 500 px. Can double as the DEX Screener header (3:1)."]
+    ]
+  },
+  { key:"video", num:"Video step 6", title:"Launch video", sub:"motion.so", color:"--c6", time:"30 to 60 min to render",
+    intro:"ChatGPT writes the video prompt, motion.so makes the video from your site link. About $5 to $10 a video against $200 to $400 for an editor, he says.",
+    notes:[
+      ["Get a video prompt","Ask ChatGPT for a motion.so prompt: clean launch-app style animations, clean sound effects, UK garage type beat."],
+      ["Add your site link","Paste the prompt and your live site into motion.so."],
+      ["Pick quality","Medium for tests, high for the real launch."],
+      ["Wait","It takes 30 minutes to an hour to render."]
+    ],
+    links:[["motion.so","https://motion.so/"]]
+  },
+  { key:"domain", num:"Video step 7", title:"Publish + domain", sub:"Through Vercel", color:"--c7", time:"10 min",
+    intro:"Publish the site from v0 and buy a domain through Vercel. Around $15 to $25.",
+    notes:[
+      ["Publish changes in v0","You get a Vercel link straight away."],
+      ["Buy a domain on Vercel","About $20 at most, he says."],
+      ["Check it on a phone","Every button, every page."]
+    ]
+  },
+  { key:"x", num:"Video step 8", title:"X account", sub:"Plus a blue check", color:"--c8", time:"10 min",
+    intro:"Make a new X account for the coin and pay for the blue check on your phone (about $5, he says).",
+    notes:[
+      ["New X account","Handle, logo, banner, bio, website link."],
+      ["Blue check","Paid verification from the X app."],
+      ["Pin the video","Your motion.so launch video as the pinned post."]
+    ]
+  },
+  { key:"proof", num:"From Chris's video", title:"DON'T: Fake social proof", sub:"Bought accounts and \"smart followers\"", warn:true,
+    intro:"Chris's video sells \"smart followers\" as \"cheap social proof\", and buying OG or aged accounts does the same job. Both make the coin look more followed and trusted than it is.",
+    notes:[
+      ["What it is","Paying for followers, or buying an old account with history, so a brand-new coin looks established."],
+      ["Why it's trouble","It misleads buyers about who backs the coin. Buying, selling or faking accounts is against X's rules."],
+      ["What happens","Accounts get suspended, often mid-launch, and the coin dies with them. Bought followers are easy to spot."],
+      ["Do instead","A fresh account, a real blue check, good content and good timing."]
+    ]
+  },
+  { key:"bundle", num:"Video step 9", title:"DON'T: The bundled launch", sub:"How the video actually launches", warn:true,
+    intro:"In Proxima the video buys extra wallets from a marketplace, set up so they don't look linked. The dev takes a small, locked 1% in public, while 12 to 15% of supply sits across 10 or more hidden holder wallets that he later sells from \"when I feel it's right\".",
+    notes:[
+      ["Why the wallets are hidden","He says it himself: if buyers could see you hold the supply, \"people are not going to buy on top of you\". Hiding it is the whole point."],
+      ["The locked 1% is cover","Locking the public dev buy looks trustworthy, while the real position is in the other wallets."],
+      ["The charity makes it worse","Selling hidden supply on a coin that promises fees to animal shelters uses a good cause to pull buyers in."],
+      ["What it can cost you","Called out publicly, wallets flagged for life, and in the UK and elsewhere a real risk of fraud or market-abuse claims."]
+    ]
+  },
+  { key:"launch", num:"Do instead", title:"Launch clean", sub:"Same build, honest launch", color:"--c5", time:"10 min",
+    intro:"Everything from the build steps still works. Only the launch changes.",
+    notes:[
+      ["Keep creator fees","Tech coins need the fees to fund the product or the buyback."],
+      ["One dev wallet","The dev buy comes from one visible wallet, at a size set in advance."],
+      ["Say what you hold","If you lock or sell, do it from that wallet so anyone can see it."],
+      ["Post CA on X and pin it","With the launch video."],
+      ["DEX Screener info","Logo, header and socials once the token shows up."]
+    ],
+    links:[["pump.fun","https://pump.fun/create"]]
+  },
+  { key:"maths", num:"Reality check", title:"The money claims", sub:"\"$50K to $100K a month\"", color:"--c9",
+    intro:"The video says one coin costs about $60, and that 24 coins a day at 5 SOL each makes $50K to $100K a month. The cost list is fair. The income maths isn't.",
+    notes:[
+      ["Costs (his numbers)","Idea and logo free, site $15 to $25, domain $15 to $25, video $5 to $10, blue check $5. About $60 a coin."],
+      ["24 a day isn't real","Each build plus video takes 1 to 2 hours, and nobody launches around the clock."],
+      ["Most launches make nothing","The 5 SOL a coin figure depends on the bundle selling to buyers. Without it, most coins never bond."],
+      ["The market has shrunk","pump.fun's monthly volume fell from $11.6B in Jan 2025 to $2.1B in Jan 2026, an 81% drop."]
+    ],
+    links:[["Source: CoinMarketCap on pump.fun volume","https://coinmarketcap.com/academy/article/pumpdotfun-caps-creator-fee-changes-to-one-per-token"]]
+  },
+  { key:"close", num:"Last step", title:"Close out", sub:"Same day", color:"--c3", time:"10 min",
+    intro:"Log every coin, including the losers.",
+    notes:[
+      ["Log the row","Peak market cap, profit, hours, cost, what worked."],
+      ["Keep the product running or stop","If you stop, say so publicly and leave the site up."]
+    ],
+    log:true
+  }
+];
+
+/* ---------- storage (fails quietly) ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let state = store.get("tlw-state", { coins:["My first coin"], current:"My first coin", data:{}, log:[], slide:0 });
+const save = () => store.set("tlw-state", state);
+const coinData = () => (state.data[state.current] ||= { ticks:{}, score:{}, id:{} });
+
+/* ---------- coin picker ---------- */
+const sel = document.getElementById("coinSel");
+function renderCoins(){
+  sel.innerHTML = state.coins.map(c => `<option${c===state.current?" selected":""}>${esc(c)}</option>`).join("");
+}
+sel.onchange = () => { state.current = sel.value; save(); render(); };
+document.getElementById("newCoin").onclick = () => {
+  const n = prompt("Name for this launch (you can change the real name on the Identity slide):");
+  if(!n) return;
+  if(!state.coins.includes(n)) state.coins.unshift(n);
+  state.current = n; state.slide = 0; save(); renderCoins(); render();
+};
+document.getElementById("resetCoin").onclick = () => {
+  if(confirm(`Untick every note for "${state.current}"?`)){ coinData().ticks = {}; save(); render(); }
+};
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+function slideDone(i){
+  const s = SLIDES[i], t = coinData().ticks;
+  return !s.warn && s.notes.length && s.notes.every((_, j) => t[`${s.key}.${j}`]);
+}
+
+/* ---------- render ---------- */
+const el = document.getElementById("slide");
+function render(){
+  const i = state.slide, s = SLIDES[i], d = coinData();
+  document.getElementById("bar").style.width = `${(i/(SLIDES.length-1))*100}%`;
+  document.getElementById("count").textContent = `${i+1} / ${SLIDES.length} · ${s.title}`;
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").textContent = i === SLIDES.length-1 ? "Back to start ↺" : `Next: ${SLIDES[i+1].title} →`;
+  document.getElementById("steps").innerHTML = SLIDES.map((x, j) =>
+    `<button class="${j===i?"active":""} ${slideDone(j)?"done":""}" data-go="${j}">${esc(x.num)} · ${esc(x.title)}</button>`).join("");
+
+  const notes = s.warn ? s.notes.map(n => `<div class="note warnnote"><span class="x">✕</span><b>${esc(n[0])}</b>${esc(n[1]||"")}</div>`).join("") : s.notes.map((n, j) => {
+    const k = `${s.key}.${j}`, tech = n[2] === "tech";
+    const tag = tech ? `<span class="tag">tech only</span>` : (n[2] ? `<span class="tag">${esc(n[2])}</span>` : "");
+    return `<div class="note ${d.ticks[k]?"done":""} ${(s.dashed||tech)?"dashed":""}" data-k="${k}" style="background:color-mix(in srgb, var(${s.color}) 32%, #fff)">
+      <span class="tick"></span><b>${esc(n[0])}</b>${esc(n[1]||"")}${tag?"<br>"+tag:""}</div>`;
+  }).join("");
+
+  let extra = s.extra || "";
+  if(s.links) extra += `<div class="panel"><h3>Links</h3>${s.links.map(l=>`<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])}</a>`).join(" · ")}</div>`;
+  if(s.score) extra += scorePanel(d);
+  if(s.identity) extra += identityPanel(d);
+  if(s.templates) extra += templatePanel(d);
+  if(s.log) extra += logPanel(d);
+
+  el.innerHTML = `<div class="board">
+    <div class="head ${s.warn?"warn":""}" style="background:var(${s.color||"--c7"})${s.dashed?";border-style:dashed":""}">
+      <div class="num">${esc(s.num)}</div><h2>${esc(s.title)}</h2><div class="sub">${esc(s.sub)}</div>
+      ${s.time?`<div class="time">⏱ ${esc(s.time)}</div>`:""}
+    </div>
+    <div><p class="intro">${esc(s.intro)}</p><div class="notes">${notes}</div>${extra}</div>
+  </div>`;
+  wire(s, d);
+  main.scrollTop = 0;
+}
+const main = document.querySelector("main");
+
+function scorePanel(d){
+  const crit = [["timing","Timing"],["orig","Originality"],["art","Art potential"],["story","Story in one line"]];
+  const sc = d.score;
+  const total = crit.reduce((a,[k]) => a + (+sc[k]||1), 0);
+  return `<div class="panel"><h3>Score it (1 to 5 each)</h3><div class="score">${crit.map(([k,l]) =>
+    `<div class="field"><label>${l}: <b id="v-${k}">${sc[k]||1}</b></label><input type="range" min="1" max="5" value="${sc[k]||1}" data-score="${k}"></div>`).join("")}</div>
+    <div class="total" id="total"></div></div>`;
+}
+function identityPanel(d){
+  const f = [["name","Name"],["ticker","Ticker"],["story","One-line story"],["tone","Tone (3 words)"],["handle","X handle"],["site","Website"],["ca","Contract address (after launch)"],["poster","Original poster @ (tweet coins)"]];
+  return `<div class="panel"><h3>This coin</h3><div class="row">${f.map(([k,l]) =>
+    `<div class="field"><label>${l}</label><input data-id="${k}" value="${esc(d.id[k]||"")}"></div>`).join("")}</div>
+    <p class="small">Saved in this browser and used to fill the copy templates on the Socials slide.</p></div>`;
+}
+function templatePanel(d){
+  const v = d.id, n = v.name||"[NAME]", t = (v.ticker||"[TICKER]").replace(/^\$/,""), st = v.story||"[ONE-LINE STORY]",
+        site = v.site||"[WEBSITE]", ca = v.ca||"[CA]", p = v.poster ? v.poster.replace(/^@?/,"@") : "@[poster]";
+  const tpls = [
+    ["X bio", `${n} ($${t}) · ${st}\n${site}`],
+    ["X bio, tweet coin", `${n} ($${t}) · ${st}\nNot affiliated with ${p}.`],
+    ["Launch post", `$${t} is live.\n\n${st}\n\nCA: ${ca}`],
+    ["pump.fun description", `${st}${v.poster ? `\n\nNot affiliated with ${p}.` : ""}`]
+  ];
+  return `<div class="panel"><h3>Copy templates</h3>${tpls.map(([l,x],j) =>
+    `<div><div class="row" style="justify-content:space-between"><b style="font-size:13px">${l}</b><button data-copy="${j}">Copy</button></div><div class="tpl" id="tpl-${j}">${esc(x)}</div></div>`).join("")}
+    <p class="small">Fill the fields on the Identity slide and these update.</p></div>`;
+}
+function logPanel(d){
+  const rows = state.log.map((r,j) => `<tr>${["date","coin","type","score","dev","peak","pnl","hours","note"].map(k=>`<td>${esc(r[k]||"")}</td>`).join("")}<td><button data-del="${j}">✕</button></td></tr>`).join("");
+  const sc = d.score, score = ["timing","orig","art","story"].reduce((a,k)=>a+(+sc[k]||1),0);
+  return `<div class="panel"><h3>Launch log</h3>
+    <div class="row">
+      <div class="field"><label>Type</label><select id="l-type"><option>Tech coin</option><option>Skipped</option></select></div>
+      <div class="field"><label>Dev buy (SOL)</label><input id="l-dev"></div>
+      <div class="field"><label>Peak MC</label><input id="l-peak"></div>
+      <div class="field"><label>Profit (SOL)</label><input id="l-pnl"></div>
+      <div class="field"><label>Hours</label><input id="l-hours"></div>
+      <div class="field" style="flex:2"><label>Note</label><input id="l-note"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button class="primary" id="l-add">Add "${esc(d.id.name||state.current)}" to log (score ${score}/20)</button><button id="l-csv">Download CSV</button></div>
+    <div style="overflow-x:auto;margin-top:12px"><table><tr><th>Date</th><th>Coin</th><th>Type</th><th>Score</th><th>Dev buy</th><th>Peak MC</th><th>Profit</th><th>Hours</th><th>Note</th><th></th></tr>${rows || `<tr><td colspan="10" class="small">No launches logged yet.</td></tr>`}</table></div>
+    <p class="small">The log lives in this browser. Download the CSV now and then as a backup.</p></div>`;
+}
+
+function updateTotal(d){
+  const t = ["timing","orig","art","story"].reduce((a,k)=>a+(+d.score[k]||1),0), e = document.getElementById("total");
+  if(e) e.innerHTML = `${t} / 20 · <span class="${t>=14?"go":"nogo"}">${t>=14?"GO":"NO-GO (needs 14+)"}</span>`;
+}
+
+function wire(s, d){
+  el.querySelectorAll(".note").forEach(n => n.onclick = () => {
+    const k = n.dataset.k; d.ticks[k] = !d.ticks[k]; save(); n.classList.toggle("done", !!d.ticks[k]);
+    document.querySelectorAll("#steps button")[state.slide].classList.toggle("done", slideDone(state.slide));
+  });
+  el.querySelectorAll("[data-score]").forEach(r => r.oninput = () => {
+    d.score[r.dataset.score] = +r.value; document.getElementById("v-"+r.dataset.score).textContent = r.value; save(); updateTotal(d);
+  });
+  if(s.score) updateTotal(d);
+  el.querySelectorAll("[data-id]").forEach(i => i.oninput = () => { d.id[i.dataset.id] = i.value; save(); });
+  el.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+    const txt = document.getElementById("tpl-"+b.dataset.copy).textContent;
+    try{ await navigator.clipboard.writeText(txt); b.textContent = "Copied"; }catch(e){ b.textContent = "Select + copy"; }
+    setTimeout(() => b.textContent = "Copy", 1500);
+  });
+  const add = document.getElementById("l-add");
+  if(add) add.onclick = () => {
+    const g = id => document.getElementById(id).value;
+    state.log.unshift({ date:new Date().toISOString().slice(0,10), coin:(d.id.name||state.current)+(d.id.ticker?` ($${d.id.ticker.replace(/^\$/,"")})`:""),
+      type:g("l-type"), score:["timing","orig","art","story"].reduce((a,k)=>a+(+d.score[k]||1),0), dev:g("l-dev"), peak:g("l-peak"), pnl:g("l-pnl"), hours:g("l-hours"), note:g("l-note") });
+    save(); render();
+  };
+  el.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    if(confirm("Remove this log row?")){ state.log.splice(+b.dataset.del,1); save(); render(); }
+  });
+  const csv = document.getElementById("l-csv");
+  if(csv) csv.onclick = () => {
+    const keys = ["date","coin","type","score","dev","peak","pnl","hours","note"];
+    const out = [keys.join(",")].concat(state.log.map(r => keys.map(k => `"${String(r[k]||"").replace(/"/g,'""')}"`).join(","))).join("\n");
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([out],{type:"text/csv"})); a.download = "launch-log.csv"; a.click();
+  };
+}
+
+/* ---------- navigation ---------- */
+function go(i){ state.slide = Math.max(0, Math.min(SLIDES.length-1, i)); save(); render(); }
+document.getElementById("prev").onclick = () => go(state.slide-1);
+document.getElementById("next").onclick = () => go(state.slide === SLIDES.length-1 ? 0 : state.slide+1);
+document.getElementById("steps").onclick = e => { const b = e.target.closest("[data-go]"); if(b) go(+b.dataset.go); };
+document.addEventListener("keydown", e => {
+  if(["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)) return;
+  if(e.key === "ArrowRight") go(state.slide+1);
+  if(e.key === "ArrowLeft") go(state.slide-1);
+});
+
+if(!state.coins.includes(state.current)) state.current = state.coins[0];
+renderCoins(); render();
+</script>
+</body>
+</html>
